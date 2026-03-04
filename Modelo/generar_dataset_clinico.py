@@ -39,7 +39,7 @@ def mapping_neutrosofico(valor, escala_max):
     # Asegurar rango [0, 1]
     return max(0.01, min(0.99, t)), max(0.01, min(0.99, f)), max(0.01, min(0.99, i))
 
-def generar_dataset(n_pacientes=1000000):
+def generar_dataset(n_pacientes=300):
     print(f"Generando dataset para {n_pacientes} pacientes (VECTORIZADO)...")
     
     # 1. Perfiles (0: Sano, 1: Leve, 2: Severo)

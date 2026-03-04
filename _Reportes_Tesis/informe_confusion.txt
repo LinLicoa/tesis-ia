@@ -1,0 +1,48 @@
+=== REPORTE DE MATRIZ DE CONFUSIÓN Y PRECISIÓN ===
+
+--- Evaluación para: Ansiedad ---
+Precisión (Accuracy): 91.00%
+Reporte de Clasificación:
+              precision    recall  f1-score   support
+
+        Bajo       0.86      0.89      0.88        79
+       Medio       0.72      0.79      0.76        53
+        Alto       1.00      0.96      0.98       168
+
+    accuracy                           0.91       300
+   macro avg       0.86      0.88      0.87       300
+weighted avg       0.92      0.91      0.91       300
+
+
+--- Evaluación para: Depresión ---
+Precisión (Accuracy): 89.00%
+Reporte de Clasificación:
+              precision    recall  f1-score   support
+
+        Bajo       0.79      0.75      0.77        64
+       Medio       0.69      0.75      0.72        56
+        Alto       0.99      0.98      0.99       180
+
+    accuracy                           0.89       300
+   macro avg       0.82      0.83      0.82       300
+weighted avg       0.89      0.89      0.89       300
+
+
+--- Evaluación para: Estrés ---
+Precisión (Accuracy): 94.67%
+Reporte de Clasificación:
+              precision    recall  f1-score   support
+
+        Bajo       0.97      1.00      0.99       113
+       Medio       0.73      0.89      0.80        37
+        Alto       0.99      0.92      0.96       150
+
+    accuracy                           0.95       300
+   macro avg       0.90      0.94      0.92       300
+weighted avg       0.95      0.95      0.95       300
+
+
+
+Interpretación:
+Una matriz de confusión ideal tiene los números concentrados en la diagonal principal.
+Esto certifica que la red paramétrica bayesiana ha aprendido correctamente la distribución del dataset.

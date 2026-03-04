@@ -1,0 +1,11 @@
+=== REPORTE DE CORRELACIÓN CLÍNICA (Tesis IA) ===
+
+Matriz de Correlación de Pearson entre Cuestionarios:
+                   Ansiedad (GAD-7)  Depresión (PHQ-9)  Estrés (PSS-10)
+Ansiedad (GAD-7)           1.000000           0.908386         0.890010
+Depresión (PHQ-9)          0.908386           1.000000         0.899643
+Estrés (PSS-10)            0.890010           0.899643         1.000000
+
+Interpretación:
+- Valores cercanos a 1.0 indican una fuerte correlación positiva.
+- Esto demuestra que la generación del dataset (perfiles) funciona conectando intrínsecamente los padecimientos, tal como se indicó a la Red Bayesiana.

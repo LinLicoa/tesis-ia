@@ -1,0 +1,50 @@
+[
+  {
+    "idcuestionario": 1,
+    "detalles": [
+      {
+        "prueba": "GAD-7",
+        "condicion": "Ansiedad",
+        "porcentaje": 100.0,
+        "t": 1.0,
+        "i": 0.0,
+        "f": 0.0,
+        "t_bruto": 0.586,
+        "i_bruto": 0.357,
+        "f_bruto": 0.286
+      },
+      {
+        "prueba": "PHQ-9",
+        "condicion": "Depresi\u00f3n",
+        "porcentaje": 100.0,
+        "t": 1.0,
+        "i": 0.0,
+        "f": 0.0,
+        "t_bruto": 0.389,
+        "i_bruto": 0.456,
+        "f_bruto": 0.467
+      },
+      {
+        "prueba": "PSS-10",
+        "condicion": "Estr\u00e9s",
+        "porcentaje": 100.0,
+        "t": 1.0,
+        "i": 0.0,
+        "f": 0.0,
+        "t_bruto": 0.65,
+        "i_bruto": 0.31,
+        "f_bruto": 0.23
+      }
+    ],
+    "recomendaciones": [
+      "Notamos tensi\u00f3n acumulada significativa. Intenta combinar respiraci\u00f3n profunda con un paseo relajante para liberar energ\u00eda.",
+      "Realiza una desconexi\u00f3n digital programada de al menos 30 minutos al d\u00eda.",
+      "Realiza estiramientos suaves de cuello y hombros para liberar tensi\u00f3n f\u00edsica.",
+      "Conc\u00e9ntrate en tu respiraci\u00f3n abdominal, sintiendo c\u00f3mo sube y baja tu diafragma.",
+      "Utiliza la t\u00e9cnica de 'Grounding' 5-4-3-2-1: nombra 5 cosas que ves, 4 que tocas, etc.",
+      "Establece una rutina peque\u00f1a y manejable para dar estructura a tu d\u00eda.",
+      "Realiza una caminata corta, el movimiento f\u00edsico puede ayudar a mejorar el estado de \u00e1nimo.",
+      "IMPORTANTE: Estos indicadores son altos. Te recomendamos consultar con un profesional de la salud mental."
+    ]
+  }
+]

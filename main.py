@@ -4,6 +4,11 @@ from typing import List
 import pandas as pd
 import joblib
 import os
+from dotenv import load_dotenv
+
+# Cargar variables de entorno al iniciar
+load_dotenv()
+
 from pgmpy.inference import VariableElimination
 from fastapi.middleware.cors import CORSMiddleware
 from Modelo.motor_recomendaciones import obtener_recomendaciones
@@ -52,10 +57,14 @@ class DetallePrueba(BaseModel):
     prueba: str      # "GAD-7"
     condicion: str   # "Ansiedad"
     porcentaje: float
-    # Nuevos campos (Valores 0.0 - 1.0)
+    # Valores POST Red Bayesiana (0.0 - 1.0)
     t: float
     i: float
     f: float
+    # Valores PRE Red Bayesiana (Promedios crudos de las respuestas mapeadas)
+    t_bruto: float = None
+    i_bruto: float = None
+    f_bruto: float = None
 
 class Prediccion(BaseModel):
     idcuestionario: int
@@ -124,6 +133,7 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
             data_procesada.append({
                 'idcuestionario': r.idcuestionario,
                 'pregunta': r.pregunta,
+                'codigo_prueba': r.codigo_prueba,
                 't': t,
                 'f': f,
                 'i': i
@@ -212,6 +222,28 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
             raw_ansiedad = predicciones_raw.get('ansiedad_predicha')
             raw_depresion = predicciones_raw.get('depresion_predicha')
             
+            # --- Calcular promedios crudos (Antes de la Red Bayesiana) ---
+            brutos = {
+                "GAD-7": {"t": 0.0, "f": 0.0, "i": 0.0, "count": 0},
+                "PHQ-9": {"t": 0.0, "f": 0.0, "i": 0.0, "count": 0},
+                "PSS-10": {"t": 0.0, "f": 0.0, "i": 0.0, "count": 0}
+            }
+            
+            for _, row in grupo.iterrows():
+                codigo = row['codigo_prueba']
+                if codigo in brutos:
+                    brutos[codigo]['t'] += row['t']
+                    brutos[codigo]['f'] += row['f']
+                    brutos[codigo]['i'] += row['i']
+                    brutos[codigo]['count'] += 1
+            
+            for code in brutos:
+                count = brutos[code]['count']
+                if count > 0:
+                    brutos[code]['t'] = round(brutos[code]['t'] / count, 3)
+                    brutos[code]['f'] = round(brutos[code]['f'] / count, 3)
+                    brutos[code]['i'] = round(brutos[code]['i'] / count, 3)
+                    
             # 2. Generar Detalles (Mapping Semántico)
             detalles_lista = []
             
@@ -220,32 +252,44 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
                 prueba="GAD-7", 
                 condicion="Ansiedad", 
                 porcentaje=round(raw_ansiedad['t'] * 100, 1),
-                t=raw_ansiedad['t'],
-                i=raw_ansiedad['i'],
-                f=raw_ansiedad['f']
+                t=round(raw_ansiedad['t'], 3),
+                i=round(raw_ansiedad['i'], 3),
+                f=round(raw_ansiedad['f'], 3),
+                t_bruto=brutos["GAD-7"]["t"],
+                i_bruto=brutos["GAD-7"]["i"],
+                f_bruto=brutos["GAD-7"]["f"]
             ))
             # Depresión -> PHQ-9
             detalles_lista.append(DetallePrueba(
                 prueba="PHQ-9", 
                 condicion="Depresión", 
                 porcentaje=round(raw_depresion['t'] * 100, 1),
-                t=raw_depresion['t'],
-                i=raw_depresion['i'],
-                f=raw_depresion['f']
+                t=round(raw_depresion['t'], 3),
+                i=round(raw_depresion['i'], 3),
+                f=round(raw_depresion['f'], 3),
+                t_bruto=brutos["PHQ-9"]["t"],
+                i_bruto=brutos["PHQ-9"]["i"],
+                f_bruto=brutos["PHQ-9"]["f"]
             ))
             # Estrés -> PSS-10
             detalles_lista.append(DetallePrueba(
                 prueba="PSS-10", 
                 condicion="Estrés", 
                 porcentaje=round(raw_estres['t'] * 100, 1),
-                t=raw_estres['t'],
-                i=raw_estres['i'],
-                f=raw_estres['f']
+                t=round(raw_estres['t'], 3),
+                i=round(raw_estres['i'], 3),
+                f=round(raw_estres['f'], 3),
+                t_bruto=brutos["PSS-10"]["t"],
+                i_bruto=brutos["PSS-10"]["i"],
+                f_bruto=brutos["PSS-10"]["f"]
             ))
             
             # 3. Generar Recomendaciones
             try:
-                consejos = obtener_recomendaciones(raw_estres['t'], raw_ansiedad['t'], raw_depresion['t'])
+                consejos = obtener_recomendaciones(
+                    raw_estres['t'], raw_ansiedad['t'], raw_depresion['t'],
+                    raw_estres['i'], raw_ansiedad['i'], raw_depresion['i']
+                )
             except Exception as e_rec:
                 print(f"Error generando recomendaciones para ID {id_cuestionario}: {e_rec}")
                 consejos = ["Error generando recomendaciones."]
