@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from pgmpy.models import BayesianNetwork
+from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
 import joblib
@@ -62,6 +62,11 @@ def main():
              df_final[target] = df[target].apply(discretizar_valor)
 
     print(f"Datos listos. Dimensiones: {df_final.shape}")
+    
+    # Cast variables to categorical as required by pgmpy >= 1.0.0
+    for col in df_final.columns:
+        df_final[col] = df_final[col].astype('category')
+
 
     # --- Definición de Estructura (Expert Knowledge) ---
     # En lugar de buscar (lento), definimos las dependencias clínicas conocidas.
@@ -91,7 +96,7 @@ def main():
     edges.append(('estres_predicho', 'depresion_predicha'))
 
     print(f"Definiendo estructura con {len(edges)} aristas...")
-    model = BayesianNetwork(edges)
+    model = DiscreteBayesianNetwork(edges)
     
     # --- Entrenamiento de Parámetros ---
     print("Entrenando parámetros (Maximum Likelihood)...")
