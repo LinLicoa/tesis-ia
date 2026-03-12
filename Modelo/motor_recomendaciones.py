@@ -107,7 +107,7 @@ def _obtener_recomendaciones_gemini(p_estres: float, p_ansiedad: float, p_depres
     if not response.text:
        raise Exception("Gemini devolvió una respuesta vacía.")
        
-    # Limpiamos posibles formatos de markdown
+    # Limpiamos posibles formatos de markdown 2
     texto_limpio = response.text.replace('```json', '').replace('```', '').strip()
     
     try:
