@@ -245,7 +245,12 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
             }
             
             for _, row in grupo.iterrows():
-                codigo = row['codigo_prueba']
+                # Normalizamos: "gad-7", "GAD 7", "GAD7" -> "GAD-7"
+                codigo = str(row['codigo_prueba']).upper().replace(" ", "").replace("_", "-")
+                if "GAD7" in codigo or "GAD-7" in codigo: codigo = "GAD-7"
+                elif "PHQ9" in codigo or "PHQ-9" in codigo: codigo = "PHQ-9"
+                elif "PSS10" in codigo or "PSS-10" in codigo: codigo = "PSS-10"
+                
                 if codigo in brutos:
                     brutos[codigo]['t'] += row['t']
                     brutos[codigo]['f'] += row['f']
