@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
 import pandas as pd
 import joblib
@@ -73,9 +73,13 @@ class DetallePrueba(BaseModel):
     i: float
     f: float
     # Valores PRE Red Bayesiana (Promedios crudos de las respuestas mapeadas)
-    t_bruto: float = None
-    i_bruto: float = None
-    f_bruto: float = None
+    t_bruto: float = Field(default=None, alias="tBruto")
+    i_bruto: float = Field(default=None, alias="iBruto")
+    f_bruto: float = Field(default=None, alias="fBruto")
+
+    model_config = {
+        "populate_by_name": True
+    }
 
 class Prediccion(BaseModel):
     idcuestionario: int
@@ -262,7 +266,7 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
             detalles_lista.append(DetallePrueba(
                 prueba="GAD-7", 
                 condicion="Ansiedad", 
-                porcentaje=round(raw_ansiedad['t'] * 100, 1),
+                porcentaje=round(raw_ansiedad['i'] * 50 + raw_ansiedad['t'] * 100, 1),
                 t=round(raw_ansiedad['t'], 3),
                 i=round(raw_ansiedad['i'], 3),
                 f=round(raw_ansiedad['f'], 3),
@@ -274,7 +278,7 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
             detalles_lista.append(DetallePrueba(
                 prueba="PHQ-9", 
                 condicion="Depresión", 
-                porcentaje=round(raw_depresion['t'] * 100, 1),
+                porcentaje=round(raw_depresion['i'] * 50 + raw_depresion['t'] * 100, 1),
                 t=round(raw_depresion['t'], 3),
                 i=round(raw_depresion['i'], 3),
                 f=round(raw_depresion['f'], 3),
@@ -286,7 +290,7 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
             detalles_lista.append(DetallePrueba(
                 prueba="PSS-10", 
                 condicion="Estrés", 
-                porcentaje=round(raw_estres['t'] * 100, 1),
+                porcentaje=round(raw_estres['i'] * 50 + raw_estres['t'] * 100, 1),
                 t=round(raw_estres['t'], 3),
                 i=round(raw_estres['i'], 3),
                 f=round(raw_estres['f'], 3),
