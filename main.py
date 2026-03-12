@@ -326,6 +326,10 @@ def predecir_emociones(respuestas: List[RespuestaUsuario]):
         if not resultados_prediccion:
             raise HTTPException(status_code=400, detail="No se pudieron generar predicciones (datos incompletos o inválidos).")
             
+        # LOG DE DEBUGGING AGREGADO
+        import json
+        print(f"DEBUG FINAL API RESPONSE: {json.dumps([r.model_dump(by_alias=True) for r in resultados_prediccion])}")
+            
         return resultados_prediccion
 
     except Exception as e:
