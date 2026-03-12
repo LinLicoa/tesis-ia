@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import joblib
-from pgmpy.models import BayesianNetwork
+from pgmpy.models import DiscreteBayesianNetwork as BayesianNetwork
 from pgmpy.inference import VariableElimination
 from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 import seaborn as sns

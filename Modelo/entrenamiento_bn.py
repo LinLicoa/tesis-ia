@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from pgmpy.models import DiscreteBayesianNetwork
+from pgmpy.models import DiscreteBayesianNetwork as BayesianNetwork
 from pgmpy.estimators import MaximumLikelihoodEstimator
 from pgmpy.inference import VariableElimination
 import joblib
@@ -96,7 +96,7 @@ def main():
     edges.append(('estres_predicho', 'depresion_predicha'))
 
     print(f"Definiendo estructura con {len(edges)} aristas...")
-    model = DiscreteBayesianNetwork(edges)
+    model = BayesianNetwork(edges)
     
     # --- Entrenamiento de Parámetros ---
     print("Entrenando parámetros (Maximum Likelihood)...")

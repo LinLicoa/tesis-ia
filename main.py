@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 # Cargar variables de entorno al iniciar
 load_dotenv()
 
+from pgmpy.models import DiscreteBayesianNetwork  # noqa: F401 — needed for joblib deserialization
 from pgmpy.inference import VariableElimination
 from fastapi.middleware.cors import CORSMiddleware
 from Modelo.motor_recomendaciones import obtener_recomendaciones
@@ -37,13 +38,23 @@ except Exception as e:
 # Crear la aplicación FastAPI
 app = FastAPI(title="API de Predicción Emocional Neutrosófica", version="2.0")
 
+# CORS: acepta localhost para desarrollo + orígenes de producción vía variable de entorno
+allowed_origins = ["http://localhost:4200"]
+extra_origins = os.environ.get("CORS_ORIGINS", "")
+if extra_origins:
+    allowed_origins.extend([o.strip() for o in extra_origins.split(",")])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Tu frontend Angular
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/health")
+def health_check():
+    return {"status": "ok", "model_loaded": modelo_bn is not None}
 
 # --- MODELOS DE DATOS (Pydantic) ---
 # --- MODELOS DE DATOS (Pydantic) ---
